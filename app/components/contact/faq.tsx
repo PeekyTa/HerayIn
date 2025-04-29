@@ -1,4 +1,4 @@
-import { prisma } from "@/prisma"
+import { prisma } from "@/lib/prisma"
 
 const FAQ = async () => {
     const faq = await prisma.fAQ.findMany()

@@ -53,11 +53,11 @@ model Artisan {
   region            String
   ville             String
   workshop          Boolean   @default(false)
-  activite_principal String
+  actPrincipal      String    @default("Non")
   certificat        String?
   marque            String?
-  instagram         String?
-  instagram_link    String?
+  reseauSocial      String?
+  lien              String?
   decouverte        String?
   autre_source      String?
   is_approved       Boolean   @default(false)
@@ -67,6 +67,7 @@ model Artisan {
   
   ateliers          Atelier[]
   reservations      Reservation[]
+  creneaux      CreneauReserve[]
 }
 
 model FAQ {
@@ -127,4 +128,47 @@ model Feedback {
   
   membre       Membre    @relation(fields: [idMembre], references: [idMembre])
   idMembre     String
+}
+
+model Espace {
+  idEspace    Int       @id @default(autoincrement())
+  nom  String
+  description   String?
+  adresse   String?
+  capacite    Int?
+  prixEspace  Int
+  creneaux    CreneauReserve[]
+  images        ImageEspace[] 
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+}
+
+model ImageEspace{
+  idImgEspace   Int     @id @default(autoincrement())
+  img_url   String
+  imageType ImageType @default(PRINCIPALE)
+  espace        Espace    @relation(fields: [idEspace], references: [idEspace], onDelete: Cascade)
+  idEspace      Int
+
+  @@unique([idEspace, img_url]) //namna3 el doublons
+}
+
+enum ImageType {
+  PRINCIPALE
+  SECONDAIRE
+}
+
+model CreneauReserve {
+  id              Int               @id @default(autoincrement())
+  espace          Espace            @relation(fields: [idEspace], references: [idEspace])
+  idEspace        Int
+  artisan         Artisan           @relation(fields: [idArtisan], references: [idArtisan])
+  idArtisan       String
+  date_debut      DateTime
+  date_fin        DateTime
+  prix_total      Float
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  @@index([idEspace, date_debut, date_fin])
 }

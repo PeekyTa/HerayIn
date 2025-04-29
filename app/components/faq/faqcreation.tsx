@@ -36,9 +36,9 @@ export default function Faqcreation({ defaultValues, redirectPath = "/faq" }: { 
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors)
-      setIsSubmitting(false)
       return
-    }
+    setIsSubmitting(false)
+      }
 
     try {
       const isEdit = !!defaultValues?.idFAQ
