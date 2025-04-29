@@ -1,0 +1,130 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Utilisateur {
+  idUser      String    @id @default(uuid())
+  nomUser     String
+  email       String    @unique
+  mdp         String    
+  statuCmx    String?
+
+  visiteur    Visiteur?
+  admin       Admin?
+  artisan     Artisan?
+  membre      Membre?
+}
+
+model Visiteur {
+  idVisiteur  String    @id @default(uuid())
+  utilisateur Utilisateur @relation(fields: [idUser], references: [idUser])
+  idUser      String    @unique
+}
+
+model Admin {
+  idAdmin     String    @id @default(uuid())
+  utilisateur Utilisateur @relation(fields: [idUser], references: [idUser])
+  idUser      String    @unique
+}
+
+model Membre {
+  idMembre    String    @id @default(uuid())
+  numGSM      Int
+  photoProfil       String?
+  utilisateur Utilisateur @relation(fields: [idUser], references: [idUser])
+  idUser      String    @unique
+  
+  reservations Reservation[]
+  feedbacks    Feedback[]
+}
+
+model Artisan {
+  idArtisan         String    @id @default(uuid())
+  specialite        String
+  experience        Int
+  tel               Int
+  photo             String?
+  adresse           String
+  region            String
+  ville             String
+  workshop          Boolean   @default(false)
+  activite_principal String
+  certificat        String?
+  marque            String?
+  instagram         String?
+  instagram_link    String?
+  decouverte        String?
+  autre_source      String?
+  is_approved       Boolean   @default(false)
+  
+  utilisateur       Utilisateur @relation(fields: [idUser], references: [idUser])
+  idUser            String    @unique
+  
+  ateliers          Atelier[]
+  reservations      Reservation[]
+}
+
+model FAQ {
+  idFAQ       Int       @id @default(autoincrement())
+  question    String
+  reponse     String
+  cree_a      DateTime  @default(now())
+  modifiee_a  DateTime  @updatedAt
+}
+
+model Article {
+  idArticle          Int       @id @default(autoincrement())
+  titre              String
+  dateArticle        DateTime  @default(now())
+  contenuArticle String
+  imageArticle       String?
+}
+
+model Atelier {
+  idAtelier     Int       @id @default(autoincrement())
+  nomAtelier    String
+  description   String
+  dateDebut     DateTime
+  lieu          String
+  duree         Int       
+  places_dispo  Int
+  prix          Int
+  imgAtelier    String?
+  
+  artisan       Artisan   @relation(fields: [idArtisan], references: [idArtisan])
+  idArtisan     String
+  
+  reservations  Reservation[]
+  feedbacks     Feedback[]
+}
+
+model Reservation {
+  idReservation String    @id @default(uuid())
+  dateReservation DateTime  @default(now())
+  
+  atelier      Atelier    @relation(fields: [idAtelier], references: [idAtelier])
+  idAtelier    Int
+  
+  membre       Membre?    @relation(fields: [idMembre], references: [idMembre])
+  idMembre     String?
+  
+  artisan      Artisan?   @relation(fields: [idArtisan], references: [idArtisan])
+  idArtisan    String?
+}
+
+model Feedback {
+  idFeedback   Int       @id @default(autoincrement())
+  note         Int
+  commentaire  String?
+  
+  atelier      Atelier   @relation(fields: [idAtelier], references: [idAtelier])
+  idAtelier    Int
+  
+  membre       Membre    @relation(fields: [idMembre], references: [idMembre])
+  idMembre     String
+}
