@@ -10,7 +10,7 @@ interface FAQ {
   reponse: string
 }
 
-export default function Faqcreation({ defaultValues }: { defaultValues?: FAQ }) {
+export default function Faqcreation({ defaultValues, redirectPath = "/faq" }: { defaultValues?: FAQ, redirectPath?: string }) {
   const router = useRouter()
   const [formData, setFormData] = useState<FAQ>({
     question: '',
@@ -71,6 +71,7 @@ export default function Faqcreation({ defaultValues }: { defaultValues?: FAQ }) 
       
       resetForm()
       router.refresh()
+      router.push(redirectPath)
     } catch (error) {
       setErrors({
         form: error instanceof Error ? error.message : 'Erreur inconnue'

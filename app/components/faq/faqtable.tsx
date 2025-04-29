@@ -44,7 +44,7 @@ export default function FAQTable({ faqs }: { faqs: FAQ[] }) {
           <td className="py-4 px-4">{faq.reponse}</td>
             <td className="py-4 px-4 flex space-x-2">
               <Link 
-              href={`/dashboard/admin/faq/edit/${faq.idFAQ}`}
+              href={`/faq/edit/${faq.idFAQ}`}
               className="text-blue-600 hover:text-blue-800 p-1 rounded hover:bg-blue-50">
                 <Pencil className="w-5 h-5" />
               </Link>

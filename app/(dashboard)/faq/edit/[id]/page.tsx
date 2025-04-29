@@ -1,11 +1,9 @@
 import Faqcreation from "@/app/components/faq/faqcreation"
 import { prisma } from "@/prisma"
 
-export default async function EditFAQPage({
-  params
-}: {
-  params: { id: string }
-}) {
+export default async function EditFAQPage(
+  { params }: { params: { id: string } }) 
+  {
   const faq = await prisma.fAQ.findUnique({
     where: { idFAQ: Number(params.id) }
   })
@@ -19,8 +17,9 @@ export default async function EditFAQPage({
         defaultValues={{
           idFAQ: faq.idFAQ,
           question: faq.question,
-          réponse: faq.reponse
+          reponse: faq.reponse
         }}
+        redirectPath="/faq"
       />
     </div>
   )
